@@ -904,6 +904,45 @@ def press_releases(
     query_vars = {"apikey": apikey, "limit": limit}
     return __return_json(path=path, query_vars=query_vars)
 
+# # # # # # # # # # # # # # # Insider Trading Functions # # # # # # # # # # # # # # #
+def insider_trading_rss_feed(
+    apikey: str, limit: int = DEFAULT_LIMIT
+) -> typing.List[typing.Dict]:
+    """
+
+    :param apikey: Your API key.
+    :param limit: Maximum number of records to return.
+    :return: A list of dictionaries.
+    """
+    path = f"insider-trading-rss-feed"
+    query_vars = {"apikey": apikey, "limit": limit}
+    return __return_json(path=path, query_vars=query_vars)
+
+
+def insider_trading(
+    apikey: str,
+    symbol: str = None,
+    reporting_cik: int = None,
+    company_cik: int = None,
+    limit: int = DEFAULT_LIMIT,
+) -> typing.List[typing.Dict]:
+    path = f"insider-trading"
+    if not sum(i is not None for i in [reporting_cik, company_cik, symbol]) == 1:
+        logging.error(
+            "Do not combine symbol, reporting_cik or company_cik parameters. Only provide one."
+        )
+        exit(1)
+    query_vars = {
+        "apikey": apikey,
+    }
+    if reporting_cik:
+        query_vars["reportingCik"] = reporting_cik
+    if company_cik:
+        query_vars["companyCik"] = company_cik
+    if symbol:
+        query_vars["symbol"] = symbol
+    return __return_json(path=path, query_vars=query_vars)
+
 
 # # # # # # # # # # # # # # # # # Calendar Functions # # # # # # # # # # # # # # # # #
 def earning_calendar(
